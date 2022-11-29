@@ -76,6 +76,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/tmp/tmp.LnhzoUCGDF/disklist.c">
+			<Option target="a3"/>
+		</Unit>
 		<Unit filename="/tmp/tmp.LnhzoUCGDF/main.c">
 			<Option target="a3"/>
 		</Unit>

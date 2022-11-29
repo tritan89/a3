@@ -123,6 +123,33 @@ a3/fast:
 	$(MAKE) -f CMakeFiles/a3.dir/build.make CMakeFiles/a3.dir/build
 .PHONY : a3/fast
 
+disklist.o: disklist.c.o
+
+.PHONY : disklist.o
+
+# target to build an object file
+disklist.c.o:
+	$(MAKE) -f CMakeFiles/a3.dir/build.make CMakeFiles/a3.dir/disklist.c.o
+.PHONY : disklist.c.o
+
+disklist.i: disklist.c.i
+
+.PHONY : disklist.i
+
+# target to preprocess a source file
+disklist.c.i:
+	$(MAKE) -f CMakeFiles/a3.dir/build.make CMakeFiles/a3.dir/disklist.c.i
+.PHONY : disklist.c.i
+
+disklist.s: disklist.c.s
+
+.PHONY : disklist.s
+
+# target to generate assembly for a file
+disklist.c.s:
+	$(MAKE) -f CMakeFiles/a3.dir/build.make CMakeFiles/a3.dir/disklist.c.s
+.PHONY : disklist.c.s
+
 main.o: main.c.o
 
 .PHONY : main.o
@@ -159,6 +186,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... a3"
+	@echo "... disklist.o"
+	@echo "... disklist.i"
+	@echo "... disklist.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

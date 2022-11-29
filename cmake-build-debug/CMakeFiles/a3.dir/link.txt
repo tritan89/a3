@@ -1,1 +1,1 @@
-/usr/bin/cc -g   CMakeFiles/a3.dir/main.c.o  -o a3 
+/usr/bin/cc -g   CMakeFiles/a3.dir/main.c.o CMakeFiles/a3.dir/disklist.c.o  -o a3 

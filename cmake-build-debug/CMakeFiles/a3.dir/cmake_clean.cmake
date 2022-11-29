@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/a3.dir/disklist.c.o"
   "CMakeFiles/a3.dir/main.c.o"
   "a3"
   "a3.pdb"
