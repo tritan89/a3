@@ -17,7 +17,11 @@
 char* get_label(char* disk, char* label);
 char* get_os_name(char*disk, char* os );
 int get_free_size(char* disk);
-int num_files(char*disk, int start);
+int num_files(char*disk, int start, int numfiles);
+
+
+
+
 
 int main(int argc, char *argv[]) {
     int fd;
@@ -41,7 +45,7 @@ int main(int argc, char *argv[]) {
     get_label(disk_img,label);
 
     int files;
-    files = num_files(disk_img,0x2600);
+    files = num_files(disk_img,0x2600,0);
 
     char numFats = disk_img[16];
     int fat_sectors = disk_img[22] + (disk_img[23] << 8);
@@ -129,13 +133,16 @@ int get_free_size(char* disk){
 
 }
 
-int num_files(char*disk, int start){
-    int numfiles=0;
+int num_files(char*disk, int start, int numfiles){
+
     int addr = start;
     //char* filename;
     int perm = 0x2600;
     int temp;
-    while( addr < 0x4200){
+    int logical_cluster;
+    while( disk[addr] != 0x00){
+        logical_cluster = 0;
+        memcpy(&logical_cluster,disk+addr+26,2);
 
         char filename[9];
         for (int i = 0; i < 8; ++i) {
@@ -145,15 +152,15 @@ int num_files(char*disk, int start){
         filename[8] = '\0';
         int attr = disk[addr+11];
 
-        if ((int)filename[0]!=0xE5 && (int)filename[0] != 0x00 && filename[0]!='.' && attr != 0x0F && (attr & 0x08) != 0x08 ){
-            numfiles++;
-
+        if ((int)filename[0]!=0xE5 && (int)filename[0] != 0x00 && filename[0]!='.' && attr != 0x0F && (attr & 0x08) != 0x08 && logical_cluster != 0x00 && logical_cluster != 0x01){
             if((attr & 0x10) == 0x10) {
                 //printf("%s\n", filename);
-                int logical_cluster = disk[addr + 26] +(disk[27] <<8);
-                temp = num_files(disk,perm+logical_cluster+31);
-                numfiles+= temp;
-                numfiles--;
+
+                numfiles = num_files(disk,(logical_cluster+31)*512, numfiles);
+
+
+            }else{
+                numfiles++;
             }
         }
         addr+=0x20;
@@ -161,6 +168,7 @@ int num_files(char*disk, int start){
     return numfiles;
 
 }
+
 
 
 
