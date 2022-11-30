@@ -43,33 +43,38 @@ int main(int argc, char *argv[]) {
 }
 
 void * print_files(char*disk, int start){
-
     int addr = start;
-    int perm = 0x2600;
+    int logical_cluster;
     int size;
-    while( addr < 0x4200){
 
-        char filename[13];
+    while( disk[addr] != 0x00){
+        logical_cluster = 0;
+        memcpy(&logical_cluster,disk+addr+26,2);
+        char filename[20];
         for (int i = 0; i < 11; ++i) {
             filename[i]= disk[addr+i];
 
         }
-        filename[8] = '\0';
+        filename[11] = '\0';
         int attr = disk[addr+11];
 
-        if ((int)filename[0]!=0xE5 && (int)filename[0] != 0x00 && filename[0]!='.' && attr != 0x0F && (attr & 0x08) != 0x08 ){
-            size = get_file_size( disk, addr);
-            printf("Name: %s\n", filename);
-            printf("Size: %d\n", size);
+        if ((int)filename[0]!=0xE5 && (int)filename[0] != 0x00 && filename[0]!='.' && attr != 0x0F && (attr & 0x08) != 0x08 && logical_cluster != 0x00 && logical_cluster != 0x01){
+            size = get_file_size(disk,addr);
             if((attr & 0x10) == 0x10) {
+                printf("D %s\n",filename);
+                print_files(disk,(logical_cluster+31)*512);
 
-                int logical_cluster = disk[addr+26] +(disk[27] <<8);
-                print_files(disk,perm+logical_cluster+31);
+            } else{
 
+                printf("FILE: %s\n",filename);
+                printf("SIZE: %d\n",size);
+                print_date_time(&disk[addr]);
             }
         }
         addr+=0x20;
     }
+
+
 
 
     return NULL;

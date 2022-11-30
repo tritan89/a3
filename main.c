@@ -136,14 +136,10 @@ int get_free_size(char* disk){
 int num_files(char*disk, int start, int numfiles){
 
     int addr = start;
-    //char* filename;
-    int perm = 0x2600;
-    int temp;
     int logical_cluster;
     while( disk[addr] != 0x00){
         logical_cluster = 0;
         memcpy(&logical_cluster,disk+addr+26,2);
-
         char filename[9];
         for (int i = 0; i < 8; ++i) {
             filename[i]= disk[addr+i];
@@ -154,10 +150,7 @@ int num_files(char*disk, int start, int numfiles){
 
         if ((int)filename[0]!=0xE5 && (int)filename[0] != 0x00 && filename[0]!='.' && attr != 0x0F && (attr & 0x08) != 0x08 && logical_cluster != 0x00 && logical_cluster != 0x01){
             if((attr & 0x10) == 0x10) {
-                //printf("%s\n", filename);
-
                 numfiles = num_files(disk,(logical_cluster+31)*512, numfiles);
-
 
             }else{
                 numfiles++;
