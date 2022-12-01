@@ -46,7 +46,7 @@ void * print_files(char*disk, int start){
     int addr = start;
     int logical_cluster;
     int size;
-
+    char filetype;
     while( disk[addr] != 0x00){
         logical_cluster = 0;
         memcpy(&logical_cluster,disk+addr+26,2);
@@ -61,15 +61,18 @@ void * print_files(char*disk, int start){
         if ((int)filename[0]!=0xE5 && (int)filename[0] != 0x00 && filename[0]!='.' && attr != 0x0F && (attr & 0x08) != 0x08 && logical_cluster != 0x00 && logical_cluster != 0x01){
             size = get_file_size(disk,addr);
             if((attr & 0x10) == 0x10) {
-                printf("D %s\n",filename);
+                filetype = 'D';
                 print_files(disk,(logical_cluster+31)*512);
 
             } else{
+                filetype = 'F';
 
-                printf("FILE: %s\n",filename);
-                printf("SIZE: %d\n",size);
-                print_date_time(&disk[addr]);
+
             }
+
+            printf("%c %10d %20s ", filetype, size, filename);
+
+            print_date_time(&disk[addr]);
         }
         addr+=0x20;
     }
